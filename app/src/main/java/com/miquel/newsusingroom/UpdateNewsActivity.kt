@@ -8,7 +8,11 @@ import androidx.lifecycle.lifecycleScope
 import com.miquel.newsusingroom.databinding.UpdateNewsItemBinding
 import com.miquel.newsusingroom.repository.NewsItem
 import com.miquel.newsusingroom.repository.NewsApplication
+import com.miquel.newsusingroom.repository.NewsProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UpdateNewsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +39,22 @@ class UpdateNewsActivity : AppCompatActivity() {
         binding.cancelButton.setOnClickListener {
             startActivity(retunIntent)
             finish()
+        }
+        binding.addRandomButton.setOnClickListener {
+            val newsProvider = NewsProvider()
+            var news: NewsProvider.News? = null
+            CoroutineScope(Dispatchers.IO).launch {
+                news = newsProvider.getRandomNews()
+            }
+                binding.titleTextInputLayout.editText?.setText(news?.title)
+                binding.linkTextInputLayout.editText?.setText(news?.link)
+                binding.dateTextInputLayout.editText?.setText(news?.date)
+                binding.dateTextInputLayout.editText?.setText(news.toString())
+                binding.contentTextInputLayout.editText?.setText(news?.content)
+                binding.authorTextInputLayout.editText?.setText(news?.author)
+                binding.imageUrlTextInputLayout.editText?.setText(news?.imageUrl)
+
+
         }
         binding.submitButton.setOnClickListener {
             newsItemToEdit?.apply{

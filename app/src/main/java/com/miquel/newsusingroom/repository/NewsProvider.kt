@@ -1,3 +1,6 @@
+package com.miquel.newsusingroom.repository
+
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.xmlpull.v1.XmlPullParser
@@ -13,17 +16,21 @@ class NewsProvider {
     private val rssUrl = "https://www.elmundotoday.com/feed/"
 
     suspend fun getRandomNews(): News? = withContext(Dispatchers.IO) {
+        Log.d("NewsProvider", "getRandomNews() called")
         val newsList = mutableListOf<News>()
         try {
+            Log.d("NewsProvider", "Trying to connect to $rssUrl")
             val url = URL(rssUrl)
             val connection = url.openConnection() as HttpURLConnection
             connection.requestMethod = "GET"
             connection.connect()
+            Log.d("NewsProvider", "Connection successful")
 
             val factory = XmlPullParserFactory.newInstance()
             val parser = factory.newPullParser()
             val inputStream = connection.inputStream
             parser.setInput(inputStream, "UTF-8")
+            Log.d("NewsProvider", "Parser set up")
 
             var eventType = parser.eventType
             var title = ""
@@ -33,10 +40,12 @@ class NewsProvider {
             var content = ""
             var imageUrl = ""
             var insideItem = false
+            Log.d("NewsProvider", "Starting parsing loop")
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 when (eventType) {
                     XmlPullParser.START_TAG -> {
+                        Log.d("NewsProvider", "Start tag: ${parser.name}")
                         when (parser.name) {
                             "item" -> insideItem = true
                             "title" -> if (insideItem) title = parser.nextText()
@@ -48,7 +57,9 @@ class NewsProvider {
                         }
                     }
                     XmlPullParser.END_TAG -> {
+                        Log.d("NewsProvider", "End tag: ${parser.name}")
                         if (parser.name == "item" && insideItem) {
+                            Log.d("NewsProvider", "Found item: $title")
                             newsList.add(News(title, link, author, date, content, imageUrl))
                             insideItem = false
                         }
@@ -56,10 +67,14 @@ class NewsProvider {
                 }
                 eventType = parser.next()
             }
+            Log.d("NewsProvider", "Parsing loop finished. News list size: ${newsList.size}")
         } catch (e: Exception) {
+            Log.e("NewsProvider", "Error during parsing", e)
             e.printStackTrace()
         }
-        return@withContext if (newsList.isNotEmpty()) newsList[Random.nextInt(newsList.size)] else null
+        val result = if (newsList.isNotEmpty()) newsList[Random.nextInt(newsList.size)] else null
+        Log.d("NewsProvider", "Returning result: $result")
+        return@withContext result
     }
 }
 

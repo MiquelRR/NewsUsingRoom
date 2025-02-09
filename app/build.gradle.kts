@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.media3.common.ktx)
     val room_version = "2.6.1"
 
     implementation(libs.androidx.room.runtime)

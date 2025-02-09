@@ -11,6 +11,7 @@ import com.miquel.newsusingroom.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
 import com.miquel.newsusingroom.repository.User
 import com.miquel.newsusingroom.repository.NewsApplication
+import com.miquel.newsusingroom.repository.UrlProvider
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -43,9 +44,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         //if not logged in, show login
+        val cover= UrlProvider().getRandomImage()
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Glide.with(this).load("https://emtstatic.com/2016/01/aniversario-20011.jpg").into(binding.background)
+        Glide.with(this).load(cover).into(binding.background)
         binding.background.alpha = 0.3f
 
         //if press register
