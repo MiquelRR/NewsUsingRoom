@@ -10,7 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
-import com.miquel.newsusingroom.entities.NewsItem
+import androidx.compose.material3.Card
+import com.miquel.newsusingroom.repository.NewsItem
+
 
 class MyAdapter(private var cardDataList: List<NewsItem>) : RecyclerView.Adapter<MyAdapter.CardViewHolder>(){
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -19,7 +21,7 @@ class MyAdapter(private var cardDataList: List<NewsItem>) : RecyclerView.Adapter
         val date: TextView = itemView.findViewById(R.id.date_plus_author)
         val descriptionTextView: TextView = itemView.findViewById(R.id.card_paragraph)
         val card: MaterialCardView = itemView.findViewById(R.id.card)
-        val cbFavorite: MaterialCardView = itemView.findViewById(R.id.cbFavorite)
+        //val cbFavorite: MaterialCardView = itemView.findViewById(R.id.cbFavorite)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -29,9 +31,8 @@ class MyAdapter(private var cardDataList: List<NewsItem>) : RecyclerView.Adapter
 
     override fun getItemCount(): Int = cardDataList.size
 
-
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-        val cardData = cardDataList[position]
+        val cardData: NewsItem = cardDataList[position]
         Glide.with(holder.itemView.context)
             .load(cardData.imageUrl)
             .override(300, 300)
@@ -39,7 +40,7 @@ class MyAdapter(private var cardDataList: List<NewsItem>) : RecyclerView.Adapter
         holder.titleTextView.text = cardData.title
         holder.date.text = "${cardData.date} - ${cardData.author}"
         holder.descriptionTextView.text = cardData.content
-        holder.cbFavorite.isChecked = cardData.liked
+        //holder.cbFavorite.isChecked = true
         holder.card.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(cardData.link))
             holder.itemView.context.startActivity(intent)

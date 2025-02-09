@@ -16,13 +16,24 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/id_viewer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/edited_new_id_prompt"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spacer" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleTextInputLayout"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title_hint"
-            app:layout_constraintTop_toBottomOf="@id/spacer"
+            app:layout_constraintTop_toBottomOf="@id/id_viewer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -149,16 +160,7 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/id_viewer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/edited_new_id_prompt"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/buttonLayout" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

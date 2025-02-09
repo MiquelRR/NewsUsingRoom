@@ -11,7 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.miquel.newsusingroom.databinding.ActivityMainBinding
 import com.bumptech.glide.Glide
-import com.miquel.newsusingroom.entities.User
+import com.miquel.newsusingroom.repository.User
 import com.miquel.newsusingroom.repository.NewsApplication
 import kotlinx.coroutines.launch
 
@@ -96,11 +96,11 @@ class MainActivity : AppCompatActivity() {
         return Pair(email, password)
     }
 
-    fun isValidEmail(email: String): Boolean {
+    private fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
         return email.matches(emailRegex.toRegex())
     }
-    fun isValidPassword(password: String): Boolean {
+    private fun isValidPassword(password: String): Boolean {
         val passwordRegex = "^[^\\s]{3,}$"
         return password.matches(passwordRegex.toRegex())
     }
