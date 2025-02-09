@@ -23,8 +23,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        //If user is yet logged in, go to NewsListActivity
         val preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
-        val loggedUserMail = preferences.getString("logged_user_mail", "")
+        val loggedUserMail = preferences.getString("remembered_user_mail", "")
         Toast.makeText(this, "Trobat $loggedUserMail", Toast.LENGTH_SHORT).show()
         if (loggedUserMail != "") {
             lifecycleScope.launch {
@@ -35,67 +37,86 @@ class MainActivity : AppCompatActivity() {
                         "logeado como $loggedUserMail",
                         Toast.LENGTH_SHORT
                     ).show()
-                    intent.putExtra("user", user)
+                    preferences.edit().putInt("logged_user_id", user!!.id).apply()
                     startActivity(intent)
                     finish()
                 }
             }
         }
+
+        //if not logged in, show login
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Glide.with(this).load("https://emtstatic.com/2016/01/aniversario-20011.jpg").into(binding.background)
         binding.background.alpha = 0.3f
+
+        //if press register
         binding.registerButton.setOnClickListener {
-            val (email, password) = pair(binding)
+            val (email, password) = getBothFromTextEdit(binding)
             if (isValidEmail(email) && isValidPassword(password)) {
                 lifecycleScope.launch {
-                    user= NewsApplication.database.userDao().getUserByEmail(email)
+                    user = NewsApplication.database.userDao().getUserByEmail(email)
                     if (user == null) {
-                        user= User(email=email, password=password)
                         lifecycleScope.launch {
+                            user = User(email = email, password = password)
                             NewsApplication.database.userDao().addUser(user!!)
                         }
                     } else {
                         binding.name.error = getString(R.string.mail_exist_error)
                     }
-                }
-                if (user != null) {
-                    val userMailToStore = if (binding.rememberCheck.isChecked) email else ""
-                    preferences.edit().putString("logged_user_mail", userMailToStore).apply()
-                    Toast.makeText(this@MainActivity, userMailToStore, Toast.LENGTH_SHORT).show()
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(this@MainActivity, getString(R.string.login_error), Toast.LENGTH_SHORT).show()
+
+                    if (user != null) {
+                        val userMailToStoreOrNot =
+                            if (binding.rememberCheck.isChecked) email else ""
+                        preferences.edit().putString("remembered_user_mail", userMailToStoreOrNot)
+                            .apply()
+                        lifecycleScope.launch {
+                            user= NewsApplication.database.userDao().getUserByEmail(email)
+                            preferences.edit().putInt("logged_user_id", user!!.id).apply()
+                            startActivity(intent)
+                            finish()
+                        }
+
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "${getString(R.string.login_error)}-----------",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
+
+        //if press login
         binding.loginButton.setOnClickListener {
-            val (email, password) = pair(binding)
+            val (email, password) = getBothFromTextEdit(binding)
             if (isValidEmail(email) && isValidPassword(password)) {
                 lifecycleScope.launch {
                     user = NewsApplication.database.userDao().getUserByEmail(email)
                     if (user != null && user!!.password == password) {
-                        val userMailToStore = if (binding.rememberCheck.isChecked) email else ""
-                        preferences.edit().putString("logged_user_mail", userMailToStore).apply()
-                        Toast.makeText(this@MainActivity, userMailToStore, Toast.LENGTH_SHORT).show()
+                        val userMailToStoreOrNot = if (binding.rememberCheck.isChecked) email else ""
+                        preferences.edit().putString("remembered_user_mail", userMailToStoreOrNot).apply()
+                        preferences.edit().putInt("logged_user_id", user!!.id).apply()
                         startActivity(intent)
                         finish()
                     } else {
-                        Toast.makeText(this@MainActivity, getString(R.string.login_error), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "${getString(R.string.login_error)}+++++++++++++++", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
 
         }
+        /*
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+         */
     }
 
-    private fun pair(binding: ActivityMainBinding): Pair<String, String> {
+    private fun getBothFromTextEdit(binding: ActivityMainBinding): Pair<String, String> {
         val email = binding.name.text.toString()
         val password = binding.pass.text.toString()
         if (!isValidEmail(email)) {
