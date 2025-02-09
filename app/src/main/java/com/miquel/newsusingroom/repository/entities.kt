@@ -16,7 +16,7 @@ data class User(
 data class NewsItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val title: String,
+    var title: String,
     var link: String,
     var date: String,
     var content: String,

@@ -82,7 +82,8 @@ class NewsListActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 binding.myRecyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
                 binding.myRecyclerView.adapter =
-                    MyAdapter(newsList, likedNewsIds) { newsItem, isLiked ->
+                    MyAdapter(newsList, likedNewsIds,
+                        onLikeClicked = { newsItem, isLiked ->
                         CoroutineScope(Dispatchers.IO).launch {
                             if (isLiked) {
                                 database.likedDao().likeNews(Liked(userId, newsItem.id))
@@ -90,7 +91,13 @@ class NewsListActivity : AppCompatActivity() {
                                 database.likedDao().unlikeNews(Liked(userId, newsItem.id))
                             }
                         }
-                    }
+                    },
+                        onDeleteClicked = { newsItem ->
+                            CoroutineScope(Dispatchers.IO).launch {
+                                database.newsArticleDao().deleteNewsItem(newsItem)
+                            }
+                        }
+                        )
             }
         }
     }

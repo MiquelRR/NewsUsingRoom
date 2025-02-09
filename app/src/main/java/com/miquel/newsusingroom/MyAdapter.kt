@@ -1,6 +1,5 @@
 package com.miquel.newsusingroom
 
-import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
@@ -11,15 +10,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
-import androidx.compose.material3.Card
-import androidx.lifecycle.AndroidViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
+import com.miquel.newsusingroom.repository.NewsApplication
 import com.miquel.newsusingroom.repository.NewsItem
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MyAdapter(private var cardDataList: List<NewsItem>,
                 private var likedNewsIds: Set<Int>, // Conjunto de IDs de noticias que el usuario ha dado like
-                private val onLikeClicked: (NewsItem, Boolean) -> Unit // Callback para manejar likes
+                private val onLikeClicked: (NewsItem, Boolean) -> Unit ,// Callback para manejar likes
+                private val onDeleteClicked: (NewsItem) -> Unit // Nuevo callback para borrar
 ) : RecyclerView.Adapter<MyAdapter.CardViewHolder>(){
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.card_a_image)
@@ -50,14 +51,33 @@ class MyAdapter(private var cardDataList: List<NewsItem>,
         holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
             onLikeClicked(cardData, isChecked)
         }
-        /*
         holder.card.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(cardData.link))
-            holder.itemView.context.startActivity(intent)
+            if (holder.cbFavorite.isChecked ) {
+                if (cardData.link.length>4 && cardData.link.substring(0,4)=="http") {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(cardData.link))
+                    holder.itemView.context.startActivity(intent)
+                }
+            } else {
+                val intent= Intent(holder.itemView.context, UpdateNewsActivity::class.java)
+                intent.putExtra("id", cardData.id)
+                holder.itemView.context.startActivity(intent)
+            }
         }
-        */
 
+        holder.card.setOnLongClickListener {
+            if (holder.cbFavorite.isChecked ) {
+                holder.cbFavorite.isChecked = false
+            } else {
+                val pos = holder.adapterPosition
+                if (pos != RecyclerView.NO_POSITION) {
+                    onDeleteClicked(cardData)
+                    cardDataList= cardDataList.filterIndexed { index, _ -> index != pos }
+                    notifyItemRemoved(pos)
+                }
+            }
+            true
 
+        }
     }
 }
 
