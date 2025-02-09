@@ -29,7 +29,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
                 <TextView android:id="@+id/card_title"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -47,6 +48,7 @@
             </LinearLayout>
 
             <TextView android:id="@+id/date_plus_author"
+                android:layout_marginTop="32dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fake_date_plus_author_info"

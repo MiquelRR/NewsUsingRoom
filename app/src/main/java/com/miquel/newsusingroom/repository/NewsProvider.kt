@@ -51,9 +51,21 @@ class NewsProvider {
                             "title" -> if (insideItem) title = parser.nextText()
                             "link" -> if (insideItem) link = parser.nextText()
                             "dc:creator" -> if (insideItem) author = parser.nextText()
-                            "pubDate" -> if (insideItem) date = parser.nextText()
-                            "description" -> if (insideItem) content = parser.nextText().replace(Regex("<.*?>"), "")
-                            "itunes:image" -> if (insideItem) imageUrl = parser.getAttributeValue(null, "href")
+                            "pubDate" -> if (insideItem) {
+                                date = parser.nextText()
+                                // Truncate the date to the first 17 characters
+                                if (date.length >= 17) {
+                                    date = date.substring(0, 17)
+                                }
+                            }
+                            "description" -> if (insideItem) {
+                                val description = parser.nextText()
+                                content = description.replace(Regex("<.*?>"), "")
+                                // Extract image URL from description
+                                val imgRegex = Regex("<img.*?src=\"(.*?)\".*?>")
+                                val matchResult = imgRegex.find(description)
+                                imageUrl = matchResult?.groupValues?.get(1) ?: ""
+                            }
                         }
                     }
                     XmlPullParser.END_TAG -> {
@@ -77,4 +89,3 @@ class NewsProvider {
         return@withContext result
     }
 }
-
