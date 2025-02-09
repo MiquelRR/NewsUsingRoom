@@ -15,19 +15,14 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE id = :id")
     suspend fun getUserById(id: Int): User?
-
     @Query("SELECT * FROM user")
     suspend fun getUserList(): MutableList<User>
-
     @Insert
     suspend fun addUser(user: User)
-
     @Update
     suspend fun updateUser(user: User)
-
     @Delete
     suspend fun deleteUser(user: User)
-
 }
 
 @Dao
@@ -55,4 +50,6 @@ interface LikedDao {
     suspend fun unlikeNews(liked: Liked)
     @Update
     suspend fun updateLiked(liked: Liked)
+
+
 }

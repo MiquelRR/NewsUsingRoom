@@ -25,15 +25,20 @@ class MainActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val loggedUserMail = preferences.getString("logged_user_mail", "")
+        Toast.makeText(this, "Trobat $loggedUserMail", Toast.LENGTH_SHORT).show()
         if (loggedUserMail != "") {
             lifecycleScope.launch {
                 user = NewsApplication.database.userDao().getUserByEmail(loggedUserMail!!)
-            }
-            if (user != null) {
-                Toast.makeText(this, "logeado como $loggedUserMail", Toast.LENGTH_SHORT).show()
-                intent.putExtra("user", user)
-                startActivity(intent)
-                finish()
+                if (user != null) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "logeado como $loggedUserMail",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    intent.putExtra("user", user)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }
         val binding = ActivityMainBinding.inflate(layoutInflater)
@@ -57,6 +62,11 @@ class MainActivity : AppCompatActivity() {
                 if (user != null) {
                     val userMailToStore = if (binding.rememberCheck.isChecked) email else ""
                     preferences.edit().putString("logged_user_mail", userMailToStore).apply()
+                    Toast.makeText(this@MainActivity, userMailToStore, Toast.LENGTH_SHORT).show()
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this@MainActivity, getString(R.string.login_error), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -68,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     if (user != null && user!!.password == password) {
                         val userMailToStore = if (binding.rememberCheck.isChecked) email else ""
                         preferences.edit().putString("logged_user_mail", userMailToStore).apply()
+                        Toast.makeText(this@MainActivity, userMailToStore, Toast.LENGTH_SHORT).show()
                         startActivity(intent)
                         finish()
                     } else {

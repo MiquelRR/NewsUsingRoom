@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miquel.newsusingroom.databinding.ActivityNewslistBinding
+import com.miquel.newsusingroom.repository.Liked
 import com.miquel.newsusingroom.repository.NewsItem
 import com.miquel.newsusingroom.repository.User
 import com.miquel.newsusingroom.repository.NewsApplication
+import com.miquel.newsusingroom.repository.NewsApplication.Companion.database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class NewsListActivity : AppCompatActivity() {
 
@@ -22,9 +25,8 @@ class NewsListActivity : AppCompatActivity() {
         val preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE)
         val userId= preferences.getInt("user_id", -1)
         var user: User? = null
-        var likedCardList: MutableList<NewsItem> = mutableListOf()
         lifecycleScope.launch {
-            user = NewsApplication.database.userDao().getUserById(userId)
+            user = database.userDao().getUserById(userId)
         }
         var cardList: MutableList<NewsItem> = mutableListOf()
         cardList.clear()
@@ -38,12 +40,36 @@ class NewsListActivity : AppCompatActivity() {
             startActivity(Intent(this, UpdateNewsActivity::class.java))
         }
 
-        CoroutineScope(Dispatchers.Main).launch {
-            //cardList = getNewsList(rssUrl)
-            cardList = NewsApplication.database.newsArticleDao().getAllNews()
-            binding.myRecyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
-            binding.myRecyclerView.adapter = MyAdapter(cardList)
+        CoroutineScope(Dispatchers.IO).launch {
+            val likedNewsIds = loadLikesForUser(userId)
+            val allNews = database.newsArticleDao().getAllNews()
+
+            withContext(Dispatchers.Main) {
+                binding.myRecyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
+                binding.myRecyclerView.adapter = MyAdapter(allNews, likedNewsIds) { newsItem, isLiked ->
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (isLiked) {
+                            database.likedDao().likeNews(Liked(userId, newsItem.id))
+                        } else {
+                            database.likedDao().unlikeNews(Liked(userId, newsItem.id))
+                        }
+                    }
+                }
+            }
         }
 
+        /*
+        CoroutineScope(Dispatchers.Main).launch {
+            //cardList = getNewsList(rssUrl)
+            cardList = database.newsArticleDao().getAllNews()
+            binding.myRecyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
+            binding.myRecyclerView.adapter = MyAdapter(cardList, loadLikesForUser(userId))
+        }
+        */
+
+    }
+    private suspend fun loadLikesForUser(userId: Int): Set<Int> {
+        val likedNews = database.likedDao().getLikedNews(userId)
+        return likedNews.map { it.news_id }.toSet() // Convertir en Set<Int> para acceso rápido
     }
 }

@@ -27,4 +27,7 @@
     <string name="cancel_button_text">Cancelar</string>
     <string name="add_random_button_text">Random</string>
     <string name="edited_new_id_prompt">nueva noticia</string>
+    <string name="menu_exit_text">Salir</string>
+    <string name="menu_favourites_text">Solo favoritas</string>
+    <string name="menu_all_text">Todas</string>
 </resources>
