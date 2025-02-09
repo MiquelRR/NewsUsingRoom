@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView android:id="@+id/card_a_image"
+            android:layout_width="120dp"
+            android:layout_height="250dp"
+            android:contentDescription="@string/image_description"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView android:id="@+id/card_title"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/cbFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/states_cb_favorite"
+                    android:buttonTint="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </LinearLayout>
+
+            <TextView android:id="@+id/date_plus_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fake_date_plus_author_info"
+                android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Subtitle" />
+        </LinearLayout>
+
+    </LinearLayout>
+        <TextView android:id="@+id/card_paragraph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingHorizontal="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/lorem" />
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">NewsUsingRoom</string>
+    <string name="description_image_photo">Imagen relativa a la noticia</string>
+    <string name="lorem">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</string>
+    <string name="image_description">Imatge referenciant la notícia</string>
+    <string name="fake_date_plus_author_info">01/12/25-Jon Doe</string>
+    <string name="sample_title">Sample title</string>
+    <string name="hint_mail">usuario@dominio.com</string>
+    <string name="hint_pass">Contraseña</string>
+    <string name="access_button_text">Iniciar Sesión</string>
+    <string name="is_first_run">fist_run_preference</string>
+    <string name="first_image_url">https:// srv00.epimg. net/ pdf/ elpais/ snapshot/ elpaisToday. jpg</string>
+    <string name="register_button_text">Regístrate!</string>
+    <string name="keep_connected_radio_button_legend">Recuérdame</string>
+    <string name="mail_error">Formato de mail no válido</string>
+    <string name="mail_exist_error">Este mail ya está registrado</string>
+    <string name="pass_error">Contraseña inválida</string>
+    <string name="fab_add_description">añade una noticia</string>
+    <string name="title_hint">Título de la noticia</string>
+    <string name="link_hint">Link a la noticia</string>
+    <string name="date_hint">Fecha</string>
+    <string name="content_hint">Cuerpo de la noticia</string>
+    <string name="author_hint">Autor</string>
+    <string name="image_url_hint">Link de la imagen</string>
+    <string name="submit_button_text">Guardar</string>
+    <string name="login_error">Algo no estas poniendo bien...</string>
+    <string name="cancel_button_text">Cancelar</string>
+    <string name="add_random_button_text">Random</string>
+    <string name="edited_new_id_prompt">nueva noticia</string>
 </resources>
