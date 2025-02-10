@@ -11,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.miquel.newsusingroom.repository.NewsApplication
 import com.miquel.newsusingroom.repository.NewsItem
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 
 class MyAdapter(private var cardDataList: List<NewsItem>,
@@ -47,7 +45,7 @@ class MyAdapter(private var cardDataList: List<NewsItem>,
         holder.titleTextView.text = cardData.title
         holder.date.text = "${cardData.date} - ${cardData.author}"
         holder.descriptionTextView.text = cardData.content
-        holder.cbFavorite.isChecked = likedNewsIds.contains(cardData.id)
+        holder.cbFavorite.isChecked = likedNewsIds.contains(cardData.news_id)
         holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
             onLikeClicked(cardData, isChecked)
         }
@@ -59,7 +57,7 @@ class MyAdapter(private var cardDataList: List<NewsItem>,
                 }
             } else {
                 val intent= Intent(holder.itemView.context, UpdateNewsActivity::class.java)
-                intent.putExtra("id", cardData.id)
+                intent.putExtra("id", cardData.news_id)
                 holder.itemView.context.startActivity(intent)
             }
         }
@@ -76,7 +74,6 @@ class MyAdapter(private var cardDataList: List<NewsItem>,
                 }
             }
             true
-
         }
     }
 }

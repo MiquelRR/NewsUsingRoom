@@ -13,7 +13,7 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE email = :email ")
     suspend fun getUserByEmail(email: String): User?
 
-    @Query("SELECT * FROM user WHERE id = :id")
+    @Query("SELECT * FROM user WHERE user_id = :id")
     suspend fun getUserById(id: Int): User?
     @Query("SELECT * FROM user")
     suspend fun getUserList(): MutableList<User>
@@ -23,13 +23,17 @@ interface UserDao {
     suspend fun updateUser(user: User)
     @Delete
     suspend fun deleteUser(user: User)
+
+    @Transaction
+    @Query("SELECT * FROM user WHERE user_id = :id")
+    suspend fun getUserWithLikedNews(id: Int): UserWithLikedNews?
 }
 
 @Dao
 interface NewsItemDao {
     @Query("SELECT * FROM news_article")
     suspend fun getAllNews(): MutableList<NewsItem>
-    @Query("SELECT * FROM news_article WHERE id = :id")
+    @Query("SELECT * FROM news_article WHERE news_id = :id")
     suspend fun getNewsById(id: Int): NewsItem?
     @Insert
     suspend fun addNewsItem(newsItem: NewsItem)
@@ -44,12 +48,12 @@ interface NewsItemDao {
 interface LikedDao {
     @Query("SELECT * FROM likes WHERE user_id = :userid")
     suspend fun getLikedNews(userid: Int): List<Liked>
+    @Query("SELECT news_id FROM likes WHERE user_id = :userid")
+    suspend fun getLikedNewsId(userid: Int): List<Int>
     @Insert
     suspend fun likeNews(liked: Liked)
     @Delete
     suspend fun unlikeNews(liked: Liked)
     @Update
     suspend fun updateLiked(liked: Liked)
-
-
 }

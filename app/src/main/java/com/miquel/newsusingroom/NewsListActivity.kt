@@ -70,14 +70,23 @@ class NewsListActivity : AppCompatActivity() {
         binding: ActivityNewslistBinding
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            likedNewsIds = loadLikesForUser(userId)
+            likedNewsIds = database.likedDao().getLikedNewsId(userId).toSet()
 
+            /*
             newsList = if (viewOnlyLiked) {
                 if (likedNewsIds.isNotEmpty()) database.newsArticleDao().getAllNews()
                     .filter { likedNewsIds.contains(it.id) } else emptyList()
             } else {
                 database.newsArticleDao().getAllNews()
             }
+             */
+
+            val likedNews = if (viewOnlyLiked)
+                database.userDao().getUserWithLikedNews(userId)?.likedNews
+            else
+                database.newsArticleDao().getAllNews()
+
+            newsList = likedNews ?: emptyList()
 
             withContext(Dispatchers.Main) {
                 binding.myRecyclerView.layoutManager = LinearLayoutManager(this@NewsListActivity)
@@ -86,9 +95,9 @@ class NewsListActivity : AppCompatActivity() {
                         onLikeClicked = { newsItem, isLiked ->
                         CoroutineScope(Dispatchers.IO).launch {
                             if (isLiked) {
-                                database.likedDao().likeNews(Liked(userId, newsItem.id))
+                                database.likedDao().likeNews(Liked(userId, newsItem.news_id))
                             } else {
-                                database.likedDao().unlikeNews(Liked(userId, newsItem.id))
+                                database.likedDao().unlikeNews(Liked(userId, newsItem.news_id))
                             }
                         }
                     },
@@ -102,8 +111,4 @@ class NewsListActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun loadLikesForUser(userId: Int): Set<Int> {
-        val likedNews = database.likedDao().getLikedNews(userId)
-        return likedNews.map { it.news_id }.toSet() // Convertir en Set<Int> para acceso rápido
-    }
 }

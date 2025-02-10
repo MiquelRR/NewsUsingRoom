@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
                         "logeado como $loggedUserMail",
                         Toast.LENGTH_SHORT
                     ).show()
-                    preferences.edit().putInt("logged_user_id", user!!.id).apply()
+                    preferences.edit().putInt("logged_user_id", user!!.user_id).apply()
                     startActivity(intent)
                     finish()
                 }
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                             .apply()
                         lifecycleScope.launch {
                             user= NewsApplication.database.userDao().getUserByEmail(email)
-                            preferences.edit().putInt("logged_user_id", user!!.id).apply()
+                            preferences.edit().putInt("logged_user_id", user!!.user_id).apply()
                             startActivity(intent)
                             finish()
                         }
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
                     if (user != null && user!!.password == password) {
                         val userMailToStoreOrNot = if (binding.rememberCheck.isChecked) email else ""
                         preferences.edit().putString("remembered_user_mail", userMailToStoreOrNot).apply()
-                        preferences.edit().putInt("logged_user_id", user!!.id).apply()
+                        preferences.edit().putInt("logged_user_id", user!!.user_id).apply()
                         startActivity(intent)
                         finish()
                     } else {

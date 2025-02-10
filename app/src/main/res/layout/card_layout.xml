@@ -30,11 +30,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="0dp">
                 <TextView android:id="@+id/card_title"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="6dp"
                     android:text="@string/sample_title"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title" />
                 <com.google.android.material.checkbox.MaterialCheckBox
@@ -48,7 +49,7 @@
             </LinearLayout>
 
             <TextView android:id="@+id/date_plus_author"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/fake_date_plus_author_info"
