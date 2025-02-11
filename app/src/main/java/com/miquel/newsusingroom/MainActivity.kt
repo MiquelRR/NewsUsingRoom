@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.miquel.newsusingroom.repository.User
 import com.miquel.newsusingroom.repository.NewsApplication
 import com.miquel.newsusingroom.repository.UrlProvider
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -57,20 +58,21 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     user = NewsApplication.database.userDao().getUserByEmail(email)
                     if (user == null) {
-                        lifecycleScope.launch {
+                        lifecycleScope.launch(Dispatchers.IO) {
                             user = User(email = email, password = password)
                             NewsApplication.database.userDao().addUser(user!!)
+                            user= NewsApplication.database.userDao().getUserByEmail(email)
                         }
                     } else {
                         binding.name.error = getString(R.string.mail_exist_error)
                     }
-
+                    Toast.makeText(this@MainActivity, "${user?.user_id.toString()}", Toast.LENGTH_SHORT).show()
                     if (user != null) {
                         val userMailToStoreOrNot =
                             if (binding.rememberCheck.isChecked) email else ""
                         preferences.edit().putString("remembered_user_mail", userMailToStoreOrNot)
                             .apply()
-                        lifecycleScope.launch {
+                        lifecycleScope.launch(Dispatchers.IO) {
                             user= NewsApplication.database.userDao().getUserByEmail(email)
                             preferences.edit().putInt("logged_user_id", user!!.user_id).apply()
                             startActivity(intent)

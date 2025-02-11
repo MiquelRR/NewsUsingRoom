@@ -41,6 +41,7 @@ class NewsListActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_exit -> {
                     likedNewsIds = emptySet()
+                    loadNews(userId, binding)
                     preferences.edit().remove("remembered_user_mail").apply()
                     intent = Intent(this@NewsListActivity, MainActivity::class.java)
                     startActivity(intent)
@@ -71,16 +72,6 @@ class NewsListActivity : AppCompatActivity() {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             likedNewsIds = database.likedDao().getLikedNewsId(userId).toSet()
-
-            /*
-            newsList = if (viewOnlyLiked) {
-                if (likedNewsIds.isNotEmpty()) database.newsArticleDao().getAllNews()
-                    .filter { likedNewsIds.contains(it.id) } else emptyList()
-            } else {
-                database.newsArticleDao().getAllNews()
-            }
-             */
-
             val likedNews = if (viewOnlyLiked)
                 database.userDao().getUserWithLikedNews(userId)?.likedNews
             else

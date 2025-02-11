@@ -46,8 +46,8 @@ class MyAdapter(private var cardDataList: List<NewsItem>,
         holder.date.text = "${cardData.date} - ${cardData.author}"
         holder.descriptionTextView.text = cardData.content
         holder.cbFavorite.isChecked = likedNewsIds.contains(cardData.news_id)
-        holder.cbFavorite.setOnCheckedChangeListener { _, isChecked ->
-            onLikeClicked(cardData, isChecked)
+        holder.cbFavorite.setOnClickListener {
+            onLikeClicked(cardData, holder.cbFavorite.isChecked)
         }
         holder.card.setOnClickListener {
             if (holder.cbFavorite.isChecked ) {

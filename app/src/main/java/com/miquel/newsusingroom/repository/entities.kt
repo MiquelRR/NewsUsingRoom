@@ -31,8 +31,10 @@ data class NewsItem(
 @Entity(    tableName = "likes",
     primaryKeys = ["user_id", "news_id"],
     foreignKeys = [
-        ForeignKey(entity = User::class, parentColumns = ["user_id"], childColumns = ["user_id"]),
-        ForeignKey(entity = NewsItem::class, parentColumns = ["news_id"], childColumns = ["news_id"])
+        ForeignKey(entity = User::class, parentColumns = ["user_id"], childColumns = ["user_id"],
+            onDelete = ForeignKey.CASCADE),
+        ForeignKey(entity = NewsItem::class, parentColumns = ["news_id"], childColumns = ["news_id"],
+            onDelete = ForeignKey.CASCADE)
     ])
 data class Liked(
     val user_id: Int,
@@ -44,7 +46,7 @@ data class UserWithLikedNews(
     @Relation(
         parentColumn = "user_id",
         entityColumn = "news_id",
-        associateBy = Junction(Liked::class)
+        associateBy = Junction(Liked::class),
     )
     val likedNews: List<NewsItem>
 )
