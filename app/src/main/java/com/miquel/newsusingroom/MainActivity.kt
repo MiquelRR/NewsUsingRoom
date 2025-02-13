@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     } else {
                         binding.name.error = getString(R.string.mail_exist_error)
+                        user=null
                     }
                     Toast.makeText(this@MainActivity, "${user?.user_id.toString()}", Toast.LENGTH_SHORT).show()
                     if (user != null) {

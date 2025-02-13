@@ -51,4 +51,14 @@ data class UserWithLikedNews(
     val likedNews: List<NewsItem>
 )
 
+data class NewsWhithUsers(
+    @Embedded val newsItem: NewsItem,
+    @Relation(
+        parentColumn = "news_id",
+        entityColumn = "user_id",
+        associateBy = Junction(Liked::class)
+)
+    val users: List<User>
+)
+
 
